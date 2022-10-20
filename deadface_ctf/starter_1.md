@@ -1,6 +1,6 @@
 # Starter 1
 
-This is the first challenge of the deadface ctf should be fairly easy just follow the instruction:
+This is the first challenge of the deadface ctf. It should be fairly easy, just follow the instructions:
 
 
 >Welcome to DEADFACE CTF! We're very happy to have you join us and participate in this year's event. To ensure a safe and fair competition, we require all competitors to read and acknowledge the rules and Code of Conduct.
