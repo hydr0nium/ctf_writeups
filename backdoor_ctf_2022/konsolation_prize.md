@@ -51,7 +51,7 @@ Refreshing the page and taking a look into the network tab in the developer cons
 
 Nothing special here either. Maybe that in the response header there is a server field with `Werkzeug/2.2.2 Python/3.9.16`
 
-So for now we haven't found anything useful on this site. After trying some basic paths in the URL one can find this:
+So for now we haven't found anything useful on this site. Because this is a challenge we know there needs to be something so fter trying some common paths in the URL one can find this:
 
 `http://hack.backdoor.infoseciitr.in:13456/admin`, which looks like this:
 
@@ -139,7 +139,7 @@ Looking at the server.py we quickly found that the debug value of the flask app 
 
 ![image](https://user-images.githubusercontent.com/37932436/208489024-c64886a5-cd1a-44e7-b3fd-2f40a846634f.png)
 
-Unfortunately the console is locked behind a pin. After some further research we found out that the pin has the format `XXX-XXX-XXX` with X being a number from 0 to 9. We also found out that after 10 wrong tries the server locks the page and does not allow further pins to be entered until restarted. Fortunately the server is periodically (~15 min) restarted. Still this makes bruteforcing it infeasible. Let's check the web if there are any known vulnerbilites.
+Unfortunately the console is locked behind a pin. After some further research into flasks debug console we found out that the pin has the format `XXX-XXX-XXX` with X being a number from 0 to 9. We also found out that after 10 wrong tries the server locks the page and does not allow further pins to be entered until restarted. Fortunately the server is periodically (~15 min) restarted. Still this makes bruteforcing it infeasible. Let's check the web if there are any known vulnerbilites.
 
 - [Werkzeug Console Pin Exploit](https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug#pin-protected)
 
@@ -151,7 +151,7 @@ You can find the PIN printed out on the standard output of your
 shell that runs the server
 ```
 
-Let's navigate to `/article?name=../../../../../../proc/self/fd/1`. This maybe gives us the pin, ... but nope. The pages is stuck on load. So that does not work. Let's try the different attacks. For that we need the following information:
+Let's navigate to `/article?name=../../../../../../proc/self/fd/1`. This is the "file" for the stdout (1) file descriptor (fd) of the current process so this maybe gives us the pin, ... but nope. The pages is stuck on load. So that does not work. Let's try the different attacks. For that we need the following information:
 - `username` that started the server
 - `modname` which should be by default `flask.py`
 - `getattr(app, '__name__', getattr(app.__class__, '__name__'))` which should be by default `Flask`
@@ -348,7 +348,7 @@ Maybe we need to use the `-` in the random boot id?
 
 `Wrong PIN`
 
-This is where we hit a massive wall and couldn't figure out why our exploits where not working. After some hours of taking a break I took a look at it again on my local machine. So together with someones help I set up a local flask instance running a similar page with a similar exploit. This allowed us to see the acutal real PIN in the stdout in the console. I also hooked into the `werkzeug` module (the module that's responsible for the debug console and PIN). Here is a little piece of the code I changed in the `/usr/local/lib/python3.9/site-packages/werkzeug/debug/__init__.py` file, such that I could track all the values and check if we have the right ones.
+This is where we hit a massive wall and couldn't figure out why our exploits where not working. After some hours of taking a break I took a look at it again on my local machine. So together with someones help I set up a local flask instance running a similar page with a similar exploit. This allowed us to see the acutal real PIN in the stdout in the console. I also hooked into the `werkzeug` module (the module that's responsible for the debug console and PIN). Here is a excerpt of the code I changed in my local `/usr/local/lib/python3.9/site-packages/werkzeug/debug/__init__.py` file, such that I could track all the values and check if we use the correct ones.
 
 Part of local `werkzeug/debug/__init__py` (modified):
 
@@ -524,9 +524,10 @@ So YES they use sha1 and not md5. This is why it wasn't working before. So let's
 
 WE ARE IN!
 
-Ok now the only thing left is to find the flag. Here a friend joined me in the search: [@NukeOfficial](https://twitter.com/NukeOfficial_) (Discord: For now empty)
+Ok now the only thing left is to find the flag. Here a friend joined me in the search: [@NukeOfficial](https://infosec.exchange/@NukeOfficial) (Discord: NukeOfficial
+#0370)
 
-We used this python code to get arbitrary code execution of shell commands. Yes its maybe not the most efficient but it works:
+The console we now have is a interactive python interpreter. It only allows one line at a time. We used this python code to get arbitrary code execution of shell commands. Yes its maybe not the most efficient but it works (each line was entered after one another):
 
 ```py
 import subprocess
