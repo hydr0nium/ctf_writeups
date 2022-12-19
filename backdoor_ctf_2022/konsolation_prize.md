@@ -352,7 +352,7 @@ This is where we hit a massive wall and couldn't figure out why our exploits whe
 
 Part of local `werkzeug/debug/__init__py` (modified):
 
-```py
+```py showLineNumbers
 def _generate() -> t.Optional[t.Union[str, bytes]]:
         linux = b""
 
@@ -360,11 +360,11 @@ def _generate() -> t.Optional[t.Union[str, bytes]]:
         for filename in "/etc/machine-id", "/proc/sys/kernel/random/boot_id":
             try:
                 with open(filename, "rb") as f:
-                    print(f"Opened file: {filename}")
+                    print(f"Opened file: {filename}") # <-----------------------------------MODIFICATION HERE---------------------------------------
                     value = f.readline().strip()
             except OSError:
                 continue
-        print(f"First Value: {value}")
+        print(f"First Value: {value}") # <-----------------------------------HERE---------------------------------------
             if value:
                 linux += value
                 break
@@ -377,7 +377,7 @@ def _generate() -> t.Optional[t.Union[str, bytes]]:
                 linux += f.readline().strip().rpartition(b"/")[2]
         except OSError:
             pass
-        print(f"Second Value: {value}")
+        print(f"Second Value: {value}") # <-----------------------------------AND HERE---------------------------------------
         if linux:
             return linux
 ```
@@ -386,7 +386,7 @@ After getting all the stuff from `machine-id` and `cgroup` I verified that the w
 
 More modification on local `werkzeug/debug/__init__py`:
 
-```py
+```py showLineNumbers
 def get_pin_and_cookie_name(
     app: "WSGIApplication",
 ) -> t.Union[t.Tuple[str, str], t.Tuple[None, None]]:
@@ -438,8 +438,8 @@ def get_pin_and_cookie_name(
     # guess the cookie name.  They are unlikely to be contained anywhere
     # within the unauthenticated debug page.
     private_bits = [str(uuid.getnode()), get_machine_id()]
-    print(probably_public_bits)
-    print(private_bits)
+    print(probably_public_bits) # <----------------------------------------------------------MODIFICATION HERE-------------------------------
+    print(private_bits) # <-----------------------------------------------------------------------AND HERE-----------------------------------
 
     h = hashlib.sha1()
     for bit in chain(probably_public_bits, private_bits):
@@ -518,7 +518,7 @@ h = hashlib.sha1()
 for bit in chain(probably_public_bits, private_bits):
 ```
 
-So YES they use sha1 and not md5. This is why it wasn't working all the time. So let's hack together the new exploit with sha1 instead of md5. Reading through all the code I also were sure we need to use the `-` in the random boot id and we also need the cgroup content. Trying it with all this gives us this pin:
+So YES they use sha1 and not md5. This is why it wasn't working before. So let's hack together a new exploit with sha1 instead of md5. Reading through all the code I was also sure we need to use the `-` in the random boot id and we also need the cgroup stuff. Trying it with all this gives us this pin:
 
 `118-611-032`
 
