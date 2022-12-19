@@ -3,7 +3,7 @@
 
 ## 2022
 - [deadface_ctf](https://github.com/hydr0nium/ctf_writeups/tree/main/deadface_ctf)
-- [backdoor_ctf](https://github.com/hydr0nium/ctf_writeups/tree/main/backdoor_ctf_2022)
+- [backdoor_ctf](https://github.com/hydr0nium/ctf_writeups/blob/main/backdoor_ctf_2022/home.md)
 
 
 
