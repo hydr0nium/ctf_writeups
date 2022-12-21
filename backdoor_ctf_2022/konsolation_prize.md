@@ -547,3 +547,8 @@ flag{wh0_g4v3_y0u_my_fl4sk_p1n_23dde36g}
 And just like that we pwned konsolation prize.
 
 Also lot of thanks to all the people that helped. If you helped and want to be listed here just tell me and I will link to any socials you want.
+
+### Helping Hands
+
+[@NukeOfficial](https://infosec.exchange/@NukeOfficial) or Discord at NukeOfficial#0370
+[@NiklasBeierl](https://github.com/NiklasBeierl)
