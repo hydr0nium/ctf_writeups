@@ -550,5 +550,5 @@ Also lot of thanks to all the people that helped. If you helped and want to be l
 
 ### Helping Hands
 
-[@NukeOfficial](https://infosec.exchange/@NukeOfficial) or Discord at NukeOfficial#0370
-[@NiklasBeierl](https://github.com/NiklasBeierl)
+- [@NukeOfficial](https://infosec.exchange/@NukeOfficial) or Discord at NukeOfficial#0370
+- [@NiklasBeierl](https://github.com/NiklasBeierl)
