@@ -2,7 +2,7 @@
 For full transparency: I was not the person that exploited this service, but I was willing to write the write-up for it.
 
 ## Intro
-Secret Channel was a web and crypto service at Faust CTF 2024. It had some functionality to upload and retreive text or files in seemingly secure way. The service was running on port 3000.
+Secret Channel was a web and crypto service at Faust CTF 2024. It had some functionality to upload and retreive text or files in a seemingly secure way. The service was running on port 3000.
 
 ## Overview
 When we first visit the webpage we are greeted with a welcome page that lookes something like this:
@@ -100,7 +100,7 @@ export function randToken(n: number): string {
 	return crypto.randomBytes(n).toString('hex');
 }
 ```
-We can find these three function in there. One to create a randomToken, one to encrypt JSON data, and one to verify the integrity of the data via an HMAC.
+We can find these three function in there. One to create a randomToken, one to encrypt JSON data, and one to verify the integrity of the data via a HMAC.
 
 First lets check out the token creation:
 ```ts
@@ -138,10 +138,10 @@ For anyone unfamiliar with AES-256-CBC mode this is how the encryption and decry
 
 (Source: Wikipedia)
 
-The verify method is also pretty unsuprising as it just decodes the base64 splits the string into it's respective parts, verifies the HMAC and returns the decrypted plaintext as a JSON object.
+The verify method is also pretty unsuprising as it just decodes the base64, splits the string into it's respective parts, verifies the HMAC and returns the decrypted plaintext as a JSON object.
 ## Exploit
 
-You might already see the problem as I hinted a bit here and there at it in the text. It has todo with how CBC encryption works. We already know that the IV is not part of the HMAC. That means we can change it.
+You might already see the problem as I hinted at it a bit here and there in the text. It has to do with how CBC encryption works. We already know that the IV is not part of the HMAC. That means we can change it.
 And as CBC only needs the IV in the first block, and for further blocks only the ciphertext we can control the decryption result of the first block in the plaintext. Lets see what we can control with that, back at the server.ts.
 We can see that when a token is created the following dict / JSON object is used:
 ```json
@@ -152,11 +152,11 @@ We can see that when a token is created the following dict / JSON object is used
 }
 ```
 This means we can control for what message id our token is valid. Using this its possible to get a read token and thus read any message or file. Lets go over it in more detail:
-1. We create a random message and retreive or `manage` token
-2. We create an new IV such that it will change the id in the first field
+1. We create a random message and retrieve or `manage` token
+2. We create a new IV such that it will change the id in the first field
 3. We forge a new `manage` token for that id
 4. We use that manage token to create a `read` token
-5. We use the read token to retreive the flag
+5. We use the read token to retrieve the flag
 
 Let's write a python programm that does all that:
 ```py
@@ -212,10 +212,10 @@ def exploit(target, token, flagids=[]):
 
 ## Closing Words
 
-So thats it. We just pwned SecureChannel, but I need to add more stuff to this. The CTF was awesome and high quality as usual but one thing was heavily discussed in our group: `the docker management`. The dockerfiles and all the stuff around
-it was just horrible. It's bad pratice to use docker containers that don't work out of the box and that need fixing while playing the CTF just to get a local instance of the service up and running. This is not ok. Not everyone has the same
-amount of experience and fixing it took a lot of time away from the actual CTF. It just not creates a fair environment. Even now as I am writing the write-up I got problems with starting the docker container. The resolution for this was to
-recreate the dockerfile from basically scratch and then tag the new contains and changing the docker-compose file. So my advice for the future @FAUST: Please try to make it possible to run the docker containers out of the box. Cheers
+So thats it. We just pwned SecureChannel, but I need to add something. The CTF was awesome and high quality as usual but one thing was heavily discussed in our group: `the docker management`. The dockerfiles and all the stuff around
+it was just horrible. It's bad practice to use docker containers that don't work out of the box and that need fixing while playing the CTF just to get a local instance of the service up and running. This is not ok. Not everyone has the same
+amount of experience and fixing it took a lot of time away from the actual CTF. It just does not create a fair environment. Even now as I am writing the write-up I got problems with starting the docker container. The resolution for this was to
+recreate the dockerfile basically from scratch and then tag the new contains and changing the docker-compose file. So my advice for the future @FAUST: Please try to make it possible to run the docker containers out of the box. Cheers
 
 ## Appendix
 For anyone that needs the fixed docker container:
