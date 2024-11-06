@@ -209,6 +209,20 @@ def exploit(target, token, flagids=[]):
 # Exploit by Ben (not me)
 ```
 
+## Derving the Forged IV (first block only)
+```
+We want to create an IV* such that this is true for a plaintext we want
+plaintext* = IV ⊕ IV* ⊕ AES_DECRYPT(ciphertext)
+We can now swap IV and IV* as the XOR operation is commutative
+plaintext* = IV* ⊕ IV ⊕ AES_DECRYPT(ciphertext)
+We see that the rightside is just the original plaintext
+plaintext* = IV* ⊕ plaintext
+Now we can XOR the plaintext on both sides:
+plaintext* ⊕ plaintext = IV*
+
+IV* is now our forged IV resulting in an attacker controlled first block plaintext 
+```
+
 
 ## Closing Words
 
