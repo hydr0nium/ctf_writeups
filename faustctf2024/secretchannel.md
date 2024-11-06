@@ -212,10 +212,12 @@ def exploit(target, token, flagids=[]):
 
 ## Closing Words
 
-So thats it. We just pwned SecureChannel, but I need to add something. The CTF was awesome and high quality as usual but one thing was heavily discussed in our group: `the docker management`. The dockerfiles and all the stuff around
-it was just horrible. It's bad practice to use docker containers that don't work out of the box and that need fixing while playing the CTF just to get a local instance of the service up and running. This is not ok. Not everyone has the same
-amount of experience and fixing it took a lot of time away from the actual CTF. It just does not create a fair environment. Even now as I am writing the write-up I got problems with starting the docker container. The resolution for this was to
-recreate the dockerfile basically from scratch and then tag the new contains and changing the docker-compose file. So my advice for the future @FAUST: Please try to make it possible to run the docker containers out of the box. Cheers
+This is just my personal opinion. 
+
+The CTF was awesome and high quality as usual but one thing was heavily discussed in our group: `the docker management`. The dockerfiles and all the stuff around
+it was just horrible. Maybe it was just technical knowledge on my part but I couldn't get the docker containers to run. The resolution for this was to
+recreate the dockerfile basically from scratch and then tag the new contains and changing the docker-compose file. I hope that in later iteractions there will
+be a setup docker or not that can be run more easily as a local service for testing. Cheers
 
 ## Appendix
 For anyone that needs the fixed docker container:
